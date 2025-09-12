@@ -1,0 +1,6 @@
+requests
+streamlit
+transformers
+torch
+accelerate
+bitsandbytes
