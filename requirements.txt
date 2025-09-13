@@ -1,5 +1,4 @@
 requests
-tdqm
 streamlit
 transformers
 huggingface_hub
