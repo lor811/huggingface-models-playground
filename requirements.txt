@@ -1,6 +1,8 @@
 requests
+tdqm
 streamlit
 transformers
+huggingface_hub
 torch
 accelerate
 bitsandbytes

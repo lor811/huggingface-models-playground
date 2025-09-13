@@ -22,6 +22,7 @@ if not models:
     )
 else:
     with st.sidebar:
+        st.title("💬 Chat")
 
         @st.cache_resource(show_spinner=False)
         def set_assistant_cached(id: str):
@@ -30,6 +31,15 @@ else:
         with st.spinner("Loading model..."):
             selected_model_id = st.selectbox(label="Model:", options=models)
             set_assistant_cached(selected_model_id)
+
+        chat_service.set_system_message(
+            st.text_input(
+                label="System message:",
+                placeholder="You are a helpful assistant.",
+            )
+            or "You are a helpful assistant."
+        )
+        stream = st.checkbox("Stream response")
 
         chat_buttons_cols = st.columns(2, gap="small", vertical_alignment="center")
         with chat_buttons_cols[0]:
@@ -56,37 +66,29 @@ else:
             try:
                 messages = json.loads(uploaded_file.read().decode("utf-8"))
 
-                clean_messages = []
+                correct_messages = []
                 for m in messages:
                     if isinstance(m, dict) and set(m.keys()) == {"role", "content"}:
-                        clean_messages.append(m)
+                        correct_messages.append(m)
 
-                if not clean_messages:
+                if not correct_messages:
                     raise Exception("Not a valid JSON format.")
 
-                if clean_messages[0]["role"] != "system":
-                    clean_messages.insert(
+                if correct_messages[0]["role"] != "system":
+                    correct_messages.insert(
                         0, {"role": "system", "content": "You are a helpful assistant."}
                     )
 
-                chat_service.set_messages(clean_messages)
+                chat_service.set_messages(correct_messages)
             except Exception as e:
                 chat_service.clear_messages()
                 chat_service.append_message(
                     role="system", content="You are a helpful assistant."
                 )
                 st.error(f"Failed to load JSON: {e}")
-
+        
         st.divider()
-        chat_service.set_system_message(
-            st.text_input(
-                label="System message:",
-                placeholder="You are a helpful assistant.",
-            )
-            or "You are a helpful assistant."
-        )
-        stream = st.checkbox("Stream response")
-        st.divider()
+        st.title("🔧 Generation Config")
 
         max_new_tokens = st.number_input(
             "max_new_tokens:", min_value=20, max_value=4096, value=1024, step=100
@@ -98,7 +100,6 @@ else:
                 with st.expander(label="Reasoning", icon="🤔", expanded=expanded):
                     st.markdown(reasoning_text)
 
-    print(chat_service.get_messages())
     for msg in chat_service.get_messages():
         if msg["role"] == "system":
             with st.chat_message("assistant"):
