@@ -10,8 +10,6 @@ class TextGenerationModel(LoadUnloadMixin, HuggingFaceModel):
         self.tokenizer = None
         self.model = None
 
-    
-
     def _prepare_inputs(self, text_inputs: str):
         return self.tokenizer(text_inputs, return_tensors="pt")
 

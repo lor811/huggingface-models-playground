@@ -25,14 +25,13 @@ class ConversationalModel(LoadUnloadMixin, StreamMixin, HuggingFaceModel):
     ):
         if self.tokenizer is None or self.model is None:
             raise RuntimeError("Tokenizer and model must be loaded before generation.")
-        
+
         model_inputs = self._prepare_inputs(text_inputs).to(self.model.device)
         config_kwargs = self.model.generation_config.to_dict()
         generation_kwargs = {
-            "input_ids":model_inputs,
+            "input_ids": model_inputs,
             **config_kwargs,
-            "max_length": 1024,
-            **kwargs
+            **kwargs,
         }
 
         if stream:

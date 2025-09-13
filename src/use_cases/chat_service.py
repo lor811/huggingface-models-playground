@@ -23,11 +23,15 @@ class ChatService:
     def set_messages(self, messages: List[dict]):
         self._messages = messages
 
+    def set_system_message(self, content: str):
+        if self._messages[0]["role"] == "system":
+            self._messages[0]["content"] = content
+
     def append_message(
         self, role: Literal["system", "user", "assistant"], content: str
     ) -> dict:
         self._messages.append({"role": role, "content": content})
-    
+
     def pop_message(self, index: int):
         if index > 0 and index < len(self.messages):
             msg = self._messages.pop(index)
@@ -64,4 +68,3 @@ class ChatService:
                 return assistant_response
         except Exception as e:
             raise e
-            
