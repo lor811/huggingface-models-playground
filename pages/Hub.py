@@ -1,8 +1,5 @@
-import os
-import time
 from requests import HTTPError
 import streamlit as st
-from tqdm.auto import tqdm
 
 from src.use_cases.hf_api_service import HfApiService
 
