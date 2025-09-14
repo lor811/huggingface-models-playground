@@ -1,5 +1,5 @@
 # huggingface-models-playground
-A **Streamlit app** to interactively generate text using **Hugging Face Transformers** (GPT-2 or any other compatible model).
+A **Streamlit app** to interactively generate text using **Hugging Face Transformers** (conversational and text-generation compatible models).
 
 ---
 
@@ -30,13 +30,13 @@ A **Streamlit app** to interactively generate text using **Hugging Face Transfor
 
 ## Installation
 
-1. Clone the repository:
+#### 1. Clone the repository:
 
 ```bash
 git clone https://github.com/lor811/huggingface-models-playground.git
 cd huggingface-models-playground
 ```
-2. Create virtual environment and install dependencies
+#### 2. Create virtual environment and install dependencies
 
 - On macOS:
 
@@ -55,7 +55,7 @@ pip install -r requirements.txt
 
 **Note**: installation of `torch` with CUDA support via pip is **not guaranteed**. More informations on the [PyTorch website](https://pytorch.org/get-started/locally/).
 
-3. Run streamlit app
+#### 3. Run streamlit app
 ```bash
 streamlit run App.py
 ```
