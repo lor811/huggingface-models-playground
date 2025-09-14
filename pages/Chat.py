@@ -86,12 +86,39 @@ else:
                     role="system", content="You are a helpful assistant."
                 )
                 st.error(f"Failed to load JSON: {e}")
-        
+
         st.divider()
         st.title("🔧 Generation Config")
 
+        badge_placeholder = st.empty()
+
         max_new_tokens = st.number_input(
-            "max_new_tokens:", min_value=20, max_value=4096, value=1024, step=100
+            "max_new_tokens", min_value=20, max_value=4096, value=1024, step=100
+        )
+
+        do_sample = st.checkbox("do_sample", value=False)
+
+        if not do_sample:
+            badge_placeholder.badge("greedy decoding")
+        elif do_sample:
+            badge_placeholder.badge("multinomial sampling")
+
+        temperature = 1.0
+        top_k = 50
+        top_p = 1.0
+        if do_sample:
+            temperature = st.number_input(
+                "temperature", min_value=0.0, max_value=1.0, value=0.4, step=0.1
+            )
+            top_k = st.number_input(
+                "top_k", min_value=0, max_value=100, value=50, step=5
+            )
+            top_p = st.number_input(
+                "top_p", min_value=0.0, max_value=1.0, value=1.0, step=0.1
+            )
+
+        repetition_penalty = st.number_input(
+            "repetition_penalty", min_value=1.0, max_value=2.0, value=1.0, step=0.1
         )
 
     def reasoning_expander(placeholder, reasoning_text, expanded=False):
@@ -145,7 +172,15 @@ else:
             st.markdown(prompt)
 
         with st.chat_message("assistant"):
-            kwargs = {"max_new_tokens": max_new_tokens}
+            kwargs = {
+                "max_new_tokens": max_new_tokens,
+                "do_sample": do_sample,
+                "temperature": temperature,
+                "top_k": top_k,
+                "top_p": top_p,
+                "repetition_penalty": repetition_penalty,
+            }
+
             response_placeholder = st.empty()
             full_response = ""
             try:
@@ -163,7 +198,6 @@ else:
                     response_placeholder.markdown(full_response)
             except Exception as e:
                 response_placeholder.error(f"Something went wrong: {e}")
-                raise e
             finally:
                 chat_service.append_message("assistant", full_response)
         st.rerun()
